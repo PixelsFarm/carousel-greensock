@@ -1,0 +1,42 @@
+#container {
+    position: relative;
+    width: 960px;
+    height: 400px;
+    overflow: hidden;
+    margin: 100px auto 0px;
+}
+
+.slide{
+    width: 960px;
+    height: 400px;
+    position: absolute;
+    top: 0px;
+    left: 0px;
+    font-size: 50px;
+    text-align: center;
+}
+
+.slide p {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    margin: 0;
+    transform: translate(-50%,-50%);
+}
+
+.slide:nth-child(1){
+    background-color: red;
+}
+
+.slide:nth-child(2){
+    background-color: blue;
+    color: white;
+}
+
+.slide:nth-child(3){
+    background-color: green;
+}
+
+.slide:nth-child(4){
+    background-color: yellow;
+}
