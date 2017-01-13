@@ -1,14 +1,14 @@
 #container {
     position: relative;
-    width: 960px;
-    height: 400px;
+    width: 260px;
+    height: 200px;
     overflow: hidden;
     margin: 100px auto 0px;
 }
 
 .slide{
-    width: 960px;
-    height: 400px;
+    width: 260px;
+    height: 200px;
     position: absolute;
     top: 0px;
     left: 0px;
@@ -39,4 +39,37 @@
 
 .slide:nth-child(4){
     background-color: yellow;
+}
+
+#controls {
+    position: relative;
+    width: 960px;
+    height: 100px;
+    margin: 0 auto;
+}
+
+.container {
+    width: 75px;
+    margin: 0 auto;
+}
+
+.left, .right {
+    cursor: pointer;
+    position: relative;
+    width: 25px;
+    height: 25px;
+    margin: 0 auto;
+    background: #000;
+}
+
+.left { float: left; }
+.right { float: right; }
+
+.left p, .right p {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    margin: 0;
+    transform: translate(-50%,-50%);
+    color: #fff;
 }
