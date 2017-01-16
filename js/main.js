@@ -1,18 +1,37 @@
 $(document).ready(function(){
 
 //var
-var $slides	= $('.slide'),
-	currentSlide = 0,
+var $container = $('#container'),
+	$slides	= $('.slide'),
+	first,
 	next = false,
+	time = 1,
+	isMoving = false,
 	slideWidth = $slides.width(),
 	slideLength = $slides.length,
-	restOfSlides = $slides.filter(':gt(0)');
+	restOfSlides,
+	restOfSlidesPos,
+	restOfArr = [-slideWidth],
+	slidesOrder,
+	firstPos,
+	lastPos;
+
 
 //ini
 function ini() {
-	TweenLite.set(restOfSlides, {left:slideWidth});
-	//delayNext();
+	//posiciona elements al iniciar
+	$slides.each(function(rest) {
+		rest += 1;
+		slidesOrder = $slides.filter(':nth-child('+rest+')');
+		restOfSlidesPos = slideWidth * (rest-1);
+		restOfArr.push(restOfSlidesPos);
+		TweenLite.set(slidesOrder, {left: restOfArr[rest]});
+	});
+
+	firstPos = restOfArr[0];
+	lastPos = restOfArr[restOfArr.length - 1];
 	bts();
+	console.log(restOfArr);
 }
 
 //slides animation
@@ -20,45 +39,66 @@ function delayNext() {
 	TweenLite.delayedCall(4, nextSlide);
 }
 
+//ordena elements abans o després de fer l'animació
+function orderItems() {
+	if (next) {
+		TweenLite.delayedCall(time, function(){
+			isMoving = false;
+			first = $slides.filter(':nth-child(1)');
+			TweenLite.set(first, {left:lastPos});
+			first.appendTo($container);
+		});
+	} else {
+		last = $slides.filter(':nth-child('+slideLength+')');
+		TweenLite.set(last, {left:firstPos});
+		last.prependTo($container);
+		console.log('reordena after last')
+	}
+}
+
+//next
 function nextSlide() {
 	next = true;
+	isMoving = true;
 	moveSlide();
-
-	if (currentSlide < slideLength - 1) currentSlide++;
-	else currentSlide = 0;
-
-	TweenLite.fromTo( $slides.eq(currentSlide), 1, {left: slideWidth}, {left:0} );
-	//delayNext();
+	orderItems();
 }
 
+//prev
 function prevSlide() {
 	next = false;
+	isMoving = true;
+	orderItems();
 	moveSlide();
-
-	if (currentSlide < slideLength - 1) currentSlide--;
-	else currentSlide = 0;
-
-	TweenLite.fromTo( $slides.eq(currentSlide), 1, {left: -slideWidth}, {left:0} );
 }
 
+//animacio slide
 function moveSlide() {
-	if (next) {
-		TweenLite.to( $slides.eq(currentSlide), 1, {left:-slideWidth} );
-	}
-	else {
-		TweenLite.to( $slides.eq(currentSlide), 1, {left: slideWidth} );
-	}
-
+	$slides.each(function(i){
+		i += 1;
+		slidesOrder = $slides.filter(':nth-child('+i+')');
+		if (next) {
+			TweenLite.to( slidesOrder, time, {left:restOfArr[i-1]} );
+			console.log('<< LEFT');
+		}
+		else {
+			TweenLite.to( slidesOrder, time, {left:restOfArr[i], onComplete:function(){
+				isMoving = false;
+				}
+			});
+			console.log('RIGHT >>');
+		}
+	});
 }
 
 //bts
 function bts() {
 	$('.left').click(function(){
-		nextSlide();
+		if (!isMoving) nextSlide();
 	});
 
 	$('.right').click(function(){
-		prevSlide();
+		if (!isMoving) prevSlide();
 	});
 }
 

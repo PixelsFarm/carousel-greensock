@@ -1,8 +1,8 @@
 #container {
+    overflow: hidden;
     position: relative;
     width: 260px;
     height: 200px;
-    overflow: hidden;
     margin: 100px auto 0px;
 }
 
@@ -24,20 +24,20 @@
     transform: translate(-50%,-50%);
 }
 
-.slide:nth-child(1){
+#slide-1 {
     background-color: red;
 }
 
-.slide:nth-child(2){
+#slide-2 {
     background-color: blue;
     color: white;
 }
 
-.slide:nth-child(3){
+#slide-3 {
     background-color: green;
 }
 
-.slide:nth-child(4){
+#slide-4 {
     background-color: yellow;
 }
 
