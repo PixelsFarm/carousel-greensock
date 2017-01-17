@@ -1,13 +1,10 @@
 $(document).ready(function(){
 
-//var
+//-------------------------------
+// var
+//-------------------------------
 var $container = $('#container'),
 	$slides	= $('.slide'),
-	first,
-	next = false,
-	time = 1,
-	isMoving = false,
-	delayInterval,
 	slideWidth = $slides.width(),
 	slideLength = $slides.length,
 	restOfSlides,
@@ -15,10 +12,17 @@ var $container = $('#container'),
 	restOfArr = [-slideWidth],
 	slidesOrder,
 	firstPos,
-	lastPos;
+	lastPos,
+	firstItem,
+	delayInterval,
+	next = false,
+	isMoving = false,
+	time = 1;
 
 
-//ini
+//-------------------------------
+// ini
+//-------------------------------
 function ini() {
 	//posiciona elements al iniciar
 	$slides.each(function(rest) {
@@ -34,9 +38,31 @@ function ini() {
 	bts();
 	playDelayNext();
 	//console.log(restOfArr);
+} ini();
+
+
+//-------------------------------
+// buttons
+//-------------------------------
+function bts() {
+	$('.bt').click(function(){
+		//next
+		if ( $(this).hasClass('right') ) {
+			stopDelayNext();
+			if (!isMoving) nextSlide();
+		}
+		//prev
+		else {
+			stopDelayNext();
+			if (!isMoving) prevSlide();
+		}
+	});
 }
 
-//slides auto animation delay
+
+//-------------------------------
+// auto play
+//-------------------------------
 function autoPlay() {
 	nextSlide();
 }
@@ -49,14 +75,17 @@ function stopDelayNext() {
 	clearInterval(delayInterval);
 }
 
-//ordena elements abans o després de fer l'animació
+
+//-------------------------------
+// move slides
+//-------------------------------
 function orderItems() {
 	if (next) {
 		TweenLite.delayedCall(time, function(){
 			isMoving = false;
-			first = $slides.filter(':nth-child(1)');
-			TweenLite.set(first, {left:lastPos});
-			first.appendTo($container);
+			firstItem = $slides.filter(':nth-child(1)');
+			TweenLite.set(firstItem, {left:lastPos});
+			firstItem.appendTo($container);
 			stopDelayNext();
 			playDelayNext();
 		});
@@ -108,23 +137,5 @@ function moveSlide() {
 		}
 	});
 }
-
-//bts
-function bts() {
-	$('.bt').click(function(){
-		//next
-		if ( $(this).hasClass('right') ) {
-			stopDelayNext();
-			if (!isMoving) nextSlide();
-		}
-		//prev
-		else {
-			stopDelayNext();
-			if (!isMoving) prevSlide();
-		}
-	});
-}
-
-ini();
 
 });
