@@ -7,6 +7,7 @@ var $container = $('#container'),
 	next = false,
 	time = 1,
 	isMoving = false,
+	delayInterval,
 	slideWidth = $slides.width(),
 	slideLength = $slides.length,
 	restOfSlides,
@@ -31,12 +32,21 @@ function ini() {
 	firstPos = restOfArr[0];
 	lastPos = restOfArr[restOfArr.length - 1];
 	bts();
-	console.log(restOfArr);
+	playDelayNext();
+	//console.log(restOfArr);
 }
 
-//slides animation
-function delayNext() {
-	TweenLite.delayedCall(4, nextSlide);
+//slides auto animation delay
+function autoPlay() {
+	nextSlide();
+}
+
+function playDelayNext() {
+	delayInterval = setInterval(autoPlay, 3000);
+}
+
+function stopDelayNext() {
+	clearInterval(delayInterval);
 }
 
 //ordena elements abans o després de fer l'animació
@@ -47,12 +57,18 @@ function orderItems() {
 			first = $slides.filter(':nth-child(1)');
 			TweenLite.set(first, {left:lastPos});
 			first.appendTo($container);
+			stopDelayNext();
+			playDelayNext();
 		});
-	} else {
+	}
+	else {
 		last = $slides.filter(':nth-child('+slideLength+')');
 		TweenLite.set(last, {left:firstPos});
 		last.prependTo($container);
-		console.log('reordena after last')
+		TweenLite.delayedCall(time, function(){
+			stopDelayNext();
+			playDelayNext();
+		});
 	}
 }
 
@@ -77,28 +93,35 @@ function moveSlide() {
 	$slides.each(function(i){
 		i += 1;
 		slidesOrder = $slides.filter(':nth-child('+i+')');
+		//next
 		if (next) {
 			TweenLite.to( slidesOrder, time, {left:restOfArr[i-1]} );
-			console.log('<< LEFT');
+			if (i == 1) console.log('RIGHT >>');
 		}
+		//prev
 		else {
 			TweenLite.to( slidesOrder, time, {left:restOfArr[i], onComplete:function(){
 				isMoving = false;
 				}
 			});
-			console.log('RIGHT >>');
+			if (i == 1) console.log('<< LEFT');
 		}
 	});
 }
 
 //bts
 function bts() {
-	$('.left').click(function(){
-		if (!isMoving) nextSlide();
-	});
-
-	$('.right').click(function(){
-		if (!isMoving) prevSlide();
+	$('.bt').click(function(){
+		//next
+		if ( $(this).hasClass('right') ) {
+			stopDelayNext();
+			if (!isMoving) nextSlide();
+		}
+		//prev
+		else {
+			stopDelayNext();
+			if (!isMoving) prevSlide();
+		}
 	});
 }
 
